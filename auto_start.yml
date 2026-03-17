@@ -1,0 +1,30 @@
+# /home/going/.config/tmuxinator/auto_start.yml
+
+name: auto_start
+root: ~/
+
+windows:
+  - editor:
+      layout: tile
+      panes:
+        - pane1:
+          - docker start -ai elastic_tesla
+          - sleep 3 && ros2 launch ros2_yolos_cpp detector2.launch.py model_path:=src/ros2_yolos_cpp/yolov8n.onnx labels_path:=src/ros2_yolos_cpp/coco.names use_gpu:=true image_topic:=/luci>
+        - pane2:
+          - sleep 2 && docker exec -it elastic_tesla /bin/bash
+          - ros2 launch ros2_yolos_cpp detector3.launch.py model_path:=src/ros2_yolos_cpp/yolov8n.onnx labels_path:=src/ros2_yolos_cpp/coco.names use_gpu:=true image_topic:=/lucid_vision/ca>
+        - pane3:
+          - sleep 2 && docker exec -it elastic_tesla /bin/bash
+          - ros2 launch ros2_yolos_cpp detector4.launch.py model_path:=src/ros2_yolos_cpp/yolov8n.onnx labels_path:=src/ros2_yolos_cpp/coco.names use_gpu:=true image_topic:=/lucid_vision/ca>
+        - pane4:
+          - sleep 2 && docker exec -it elastic_tesla /bin/bash
+          - sleep 10
+          - ros2 lifecycle set /yolos_detector3 configure
+          - sleep 4 && ros2 lifecycle set /yolos_detector2 configure
+          - sleep 4 && ros2 lifecycle set /yolos_detector4 configure
+          - sleep 4 && ros2 lifecycle set /yolos_detector3 activate
+          - sleep 4 && ros2 lifecycle set /yolos_detector2 activate
+          - sleep 4 && ros2 lifecycle set /yolos_detector4 activate
+        - pane5:
+          - docker exec -it elastic_tesla /bin/bash
+          - ros2 launch late_fusion_for_yolos_cpp launch_fusion_node.py
