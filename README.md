@@ -175,7 +175,7 @@ rviz2
   </tr>
  </table>
  
- * GPU
+ * GPU  
    
   <table align="center" cellpadding="10"> 
   <tr>
